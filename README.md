@@ -14,6 +14,18 @@ cd game
 python3 game/main.py
 ```
 
+# App Project
+
+Para correr la app, necesitas:
+
+```sh
+git clone
+cd app
+source env/bin/activate
+pip3 install -r requirements.txt
+python3 main.py
+```
+
 # Notas sobre el ambiente virtual
 
 Si estas en linus o wsl debes instalar
@@ -50,4 +62,10 @@ Verificar las instalaciones
 
 ```sh
     pip3 freeze
+```
+
+# Automatización de dependencias
+
+```
+    requirements.txt
 ```

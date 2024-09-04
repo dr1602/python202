@@ -95,6 +95,7 @@ def country_historical_population(path):
     region = menu_regions()
 
     with open(path, 'r') as csvfile:
+        
         reader = csv.reader(csvfile, delimiter=',')
         header = next(reader)
 

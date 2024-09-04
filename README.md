@@ -68,7 +68,7 @@ Verificar las instalaciones
     pip3 freeze
 ```
 
-Copiar el nombre de las instalaciones en un archivo
+Copiar el nombre de las instalaciones en un archivo, cada que hagas actualizaciones, recuerda actualizar este archivo
 
 ```sh
     pip3 freeze > requirements.txt

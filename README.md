@@ -13,3 +13,41 @@ Para correr el juego debes seguir las siguientes instrucciones en la terminal:
 cd game
 python3 game/main.py
 ```
+
+# Notas sobre el ambiente virtual
+
+Si estas en linus o wsl debes instalar
+
+```sh
+    sudo apt install -y python3-venv
+```
+
+Poner cada proyecto en su propio ambiente, entrar en cada carpeta.
+
+```sh
+    python3 -m venv env
+```
+
+Activar el ambiente
+
+```sh
+    source env/bin/activate
+```
+
+Salir del ambiente virtual
+
+```sh
+    deactivate
+```
+
+Podemos instalar las librerias necesarias en el ambiente virtual como por ejemplo
+
+```sh
+    pip3 install matplotlib==3.5.0
+```
+
+Verificar las instalaciones
+
+```sh
+    pip3 freeze
+```

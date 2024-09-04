@@ -4,10 +4,10 @@ y generar un gráfico de torta o de barras basado en la selección.
 
 Requisitos:
 - Python 3.x instalado
-- Las bibliotecas `inquirer`, `matplotlib` y `csv` deben estar instaladas.
+- Las bibliotecas `inquirer`, `matplotlib` y `pandas` deben estar instaladas.
 
 Para instalar las dependencias necesarias, ejecuta en tu terminal:
-    pip install inquirer matplotlib
+    pip install inquirer matplotlib pandas
 
 Uso:
 - Ejecuta el script en un entorno de Python compatible.
@@ -19,7 +19,7 @@ Fecha: 4-Sept-24
 
 # Importaciones necesarias
 import inquirer
-import csv
+import pandas as pd
 import matplotlib.pyplot as plt
 
 # Ruta al archivo CSV con los datos
@@ -94,56 +94,44 @@ def country_historical_population(path):
     choice = menu_options()
     region = menu_regions()
 
-    with open(path, 'r') as csvfile:
-        
-        reader = csv.reader(csvfile, delimiter=',')
-        header = next(reader)
+    # Leer el archivo CSV usando pandas
+    df = pd.read_csv(path)
 
-        countries = []
-        data = []
-        
-        for row in reader:
-            iterable = zip(header, row)
-            country_dict = {key: value for key, value in iterable}
-            if country_dict['Continent'] == region:
-                countries.append(country_dict['Country/Territory'])
-                try:
-                    if choice in ['Growth Rate', 'World Population Percentage', 'Density (per km²)']:
-                        data.append(float(country_dict[choice]))
-                    else:
-                        data.append(int(country_dict[choice]))
-                except ValueError:
-                    print(f"Error al convertir el valor: {country_dict[choice]} de la columna {choice}")
-                    break
-        
-        try:
-            if choice in ['Growth Rate', 'World Population Percentage', 'Density (per km²)']:
-                # Preparar datos para gráfico de torta
-                final_data = {countries[i]: data[i] for i in range(len(data))}
-                sorted_data = dict(sorted(final_data.items(), key=lambda item: item[1], reverse=True))
-                
-                # Crear gráfico de torta
-                fig, ax = plt.subplots()
-                ax.pie(sorted_data.values(), labels=sorted_data.keys(), autopct='%1.1f%%', startangle=90)
-                ax.axis('equal')  # Asegurar que el gráfico de torta sea un círculo perfecto
-                
-                plt.savefig(f'./imgs/{region}_chart.jpg')
-                plt.close()
-            else:
-                # Preparar datos para gráfico de barras
-                final_data = {countries[i]: data[i] for i in range(len(data))}
-                sorted_data = dict(sorted(final_data.items(), key=lambda item: item[1], reverse=True))
-                
-                # Crear gráfico de barras
-                fig, ax = plt.subplots()
-                ax.bar(sorted_data.keys(), sorted_data.values())
-                
-                plt.savefig(f'./imgs/{region}_bars.jpg')
-                plt.close()
-        except Exception as e:
-            print(f'Error al generar el gráfico: {e}')
-        
-        return sorted_data
+    # Filtrar los datos por región seleccionada
+    df_region = df[df['Continent'] == region].copy()  # Utilizamos .copy() para evitar la advertencia
+
+    # Convertir la columna seleccionada a tipo numérico, manejando errores
+    df_region.loc[:, choice] = pd.to_numeric(df_region[choice], errors='coerce')
+
+    # Eliminar filas con valores NaN en la columna seleccionada
+    df_region = df_region.dropna(subset=[choice])
+
+    try:
+        if choice in ['Growth Rate', 'World Population Percentage', 'Density (per km²)']:
+            # Preparar datos para gráfico de torta
+            sorted_data = df_region.sort_values(by=choice, ascending=False)
+
+            # Crear gráfico de torta
+            fig, ax = plt.subplots()
+            ax.pie(sorted_data[choice], labels=sorted_data['Country/Territory'], autopct='%1.1f%%', startangle=90)
+            ax.axis('equal')  # Asegurar que el gráfico de torta sea un círculo perfecto
+            
+            plt.savefig(f'./imgs/{region}_chart.jpg')
+            plt.close()
+        else:
+            # Preparar datos para gráfico de barras
+            sorted_data = df_region.sort_values(by=choice, ascending=False)
+
+            # Crear gráfico de barras
+            fig, ax = plt.subplots()
+            ax.bar(sorted_data['Country/Territory'], sorted_data[choice])
+            
+            plt.savefig(f'./imgs/{region}_bars.jpg')
+            plt.close()
+    except Exception as e:
+        print(f'Error al generar el gráfico: {e}')
+    
+    return sorted_data
 
 # Ejecutar la función principal
 country_historical_population(path)

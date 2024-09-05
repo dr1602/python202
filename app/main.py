@@ -116,7 +116,7 @@ def country_historical_population(path):
             ax.pie(sorted_data[choice], labels=sorted_data['Country/Territory'], autopct='%1.1f%%', startangle=90)
             ax.axis('equal')  # Asegurar que el gráfico de torta sea un círculo perfecto
             
-            plt.savefig(f'./imgs/{region}_chart.jpg')
+            plt.savefig(f'./imgs/{region}_chart_view.jpg')
             plt.close()
         else:
             # Preparar datos para gráfico de barras
@@ -126,7 +126,7 @@ def country_historical_population(path):
             fig, ax = plt.subplots()
             ax.bar(sorted_data['Country/Territory'], sorted_data[choice])
             
-            plt.savefig(f'./imgs/{region}_bars.jpg')
+            plt.savefig(f'./imgs/{region}_bars_view_final.jpg')
             plt.close()
     except Exception as e:
         print(f'Error al generar el gráfico: {e}')

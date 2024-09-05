@@ -23,7 +23,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Ruta al archivo CSV con los datos
-path = './app/data.csv'
+path = './data.csv'
 
 def menu_options():
     """
